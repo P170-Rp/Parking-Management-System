@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parking Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="card dashboard">
+    <h2>Parking Management</h2>
+
+    <h3>Vehicle Entry</h3>
+    <input id="vehicle_number" placeholder="Vehicle Number">
+    <input id="mobile_number" placeholder="Owner Mobile Number">
+    <select id="type">
+        <option value="car">Car</option>
+        <option value="bike">Bike</option>
+    </select>
+
+    <button onclick="vehicleEntry()">Add Entry</button>
+
+    <hr style="margin:20px 0;border:1px solid #fff">
+
+    <h2>Vehicle Exit</h2>
+<input id="token" placeholder="Enter Token Number">
+<button onclick="vehicleExit()">Exit</button>
+
+<div id="paymentSection" style="margin-top:20px;"></div>
+
+<script>
+    async function vehicleEntry() {
+    let data = {
+        vehicle_number: vehicle_number.value,
+        type: type.value,
+        mobile_number: mobile_number.value
+    };
+
+    let res = await fetch("http://localhost:5000/parking/entry", {
+        method: 'POST',
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(data)
+    });
+
+    let json = await res.json();
+
+    alert("Token Generated: " + json.token);
+}
+
+
+// Step 1: Calculate Exit Charges
+async function vehicleExit() {
+    let tokenVal = token.value;
+
+    let res = await fetch("http://localhost:5000/parking/exit", {
+        method:'POST',
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ token: tokenVal })
+    });
+
+    let data = await res.json();
+    if (data.message === "Invalid Token") {
+        alert("Invalid Token!");
+        return;
+    }
+
+    // Show Payment Options
+    paymentSection.innerHTML = `
+        <h3>Total Hours: ${data.hours}</h3>
+        <h3>Total Charge: ₹${data.charges}</h3>
+        <h4>Select Payment Method:</h4>
+        <button onclick="payOnline('${data.token}')">Online</button>
+        <button onclick="payCash('${data.token}')">Cash</button>
+        <div id="onlineQR" style="margin-top:20px;"></div>
+    `;
+}
+
+// Step 2: Online Payment
+function payOnline(token) {
+    document.getElementById("onlineQR").innerHTML = `
+        <h4>Scan QR Code to Pay</h4>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?data=Pay-${token}&size=150x150" alt="QR Code">
+        <button onclick="completePayment('${token}', 'online')">Done</button>
+    `;
+}
+
+// Step 3: Cash Payment
+function payCash(token) {
+    if(confirm("Confirm Cash Payment?")) {
+        completePayment(token, 'cash');
+    }
+}
+
+// Step 4: Complete Payment API Call
+async function completePayment(token, method) {
+    let res = await fetch("http://localhost:5000/parking/complete-payment", {
+        method: 'POST',
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ token, method })
+    });
+
+    let data = await res.json();
+    alert(data.message);
+
+    // Reset dashboard
+    paymentSection.innerHTML = "";
+    token.value = "";
+}
+</script>
+
+
+</body>
+</html>

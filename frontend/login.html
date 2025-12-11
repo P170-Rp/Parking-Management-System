@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="card">
+    <h2>Admin Login</h2>
+
+    <input type="text" id="username" placeholder="Enter Username">
+    <input type="password" id="password" placeholder="Enter Password">
+
+    <button onclick="login()">Login</button>
+
+    <p style="margin-top:10px;">Don't have an account? 
+        <a href="signup.html" style="color:#fff;">Signup</a>
+    </p>
+</div>
+
+<script>
+async function login() {
+    let user = {
+        username: username.value,
+        password: password.value
+    };
+
+    let res = await fetch("http://localhost:5000/auth/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(user)
+    });
+
+    let data = await res.json();
+
+    if (data.message === "Login Success") {
+        window.location.href = "dashboard.html";
+    } else {
+        alert("Wrong Login!");
+    }
+}
+</script>
+
+</body>
+</html>
