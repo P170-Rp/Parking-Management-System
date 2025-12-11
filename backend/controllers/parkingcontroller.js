@@ -1,22 +1,22 @@
 const db = require("../config/db");
-const sendWhatsApp = require("../utils/sendWhatsApp");
+const sendEmail = require("../utils/sendEmail");
 function generateToken() {
     return Math.floor(100000 + Math.random() * 900000);
 }
 
 const vehicleEntry = (req, res) => {
-    const { vehicle_number, type, mobile_number } = req.body;
+    const { vehicle_number, type, mobile_number,email } = req.body;
     const token = generateToken();
     const entry_time = new Date();
 
     db.query(
-        "INSERT INTO parking (vehicle_number, type, token, entry_time, mobile_number) VALUES (?,?,?,?,?)",
-        [vehicle_number, type, token, entry_time, mobile_number],
+        "INSERT INTO parking (vehicle_number, type, token, entry_time, mobile_number, email) VALUES (?,?,?,?,?,?)",
+        [vehicle_number, type, token, entry_time, mobile_number,email],
         (err) => {
             if(err) return res.json({error: err});
 
             // ✅ WhatsApp Send Trigger
-            sendWhatsApp(mobile_number, token);
+           sendEmail(email, token);
 
             res.json({message:"Vehicle Entry Added", token});
         }

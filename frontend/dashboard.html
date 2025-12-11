@@ -12,6 +12,8 @@
 
     <h3>Vehicle Entry</h3>
     <input id="vehicle_number" placeholder="Vehicle Number">
+<input type="email" id="email" placeholder="Enter user email" required />
+
     <input id="mobile_number" placeholder="Owner Mobile Number">
     <select id="type">
         <option value="car">Car</option>
@@ -21,10 +23,12 @@
     <button onclick="vehicleEntry()">Add Entry</button>
 
     <hr style="margin:20px 0;border:1px solid #fff">
-
+<div class="vehicalexit">
     <h2>Vehicle Exit</h2>
-<input id="token" placeholder="Enter Token Number">
-<button onclick="vehicleExit()">Exit</button>
+    <input id="token" placeholder="Enter Token Number">
+    <button onclick="vehicleExit()">Exit</button>
+</div>
+
 
 <div id="paymentSection" style="margin-top:20px;"></div>
 
@@ -32,8 +36,9 @@
     async function vehicleEntry() {
     let data = {
         vehicle_number: vehicle_number.value,
+        email: email.value,  
         type: type.value,
-        mobile_number: mobile_number.value
+        mobile_number: mobile_number.value,
     };
 
     let res = await fetch("http://localhost:5000/parking/entry", {

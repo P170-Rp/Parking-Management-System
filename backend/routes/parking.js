@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const sendWhatsApp = require("../utils/sendWhatsApp");
+const sendEmail = require("../utils/sendEmail");
 
 const { vehicleEntry, vehicleExit, completePayment } = require("../controllers/parkingcontroller");
 
