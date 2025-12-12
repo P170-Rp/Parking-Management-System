@@ -15,7 +15,6 @@ const vehicleEntry = (req, res) => {
         (err) => {
             if(err) return res.json({error: err});
 
-            // ✅ WhatsApp Send Trigger
            sendEmail(email, token);
 
             res.json({message:"Vehicle Entry Added", token});
