@@ -14,7 +14,6 @@ const vehicleEntry = (req, res) => {
         [vehicle_number, type, token, entry_time, mobile_number,email],
         (err) => {
             if(err) return res.json({error: err});
-
            sendEmail(email, token);
 
             res.json({message:"Vehicle Entry Added", token});
