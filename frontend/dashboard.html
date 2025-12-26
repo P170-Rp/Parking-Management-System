@@ -84,8 +84,16 @@ async function vehicleExit() {
 function payOnline(token) {
     document.getElementById("onlineQR").innerHTML = `
         <h4>Scan QR Code to Pay</h4>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?data=Pay-${token}&size=150x150" alt="QR Code">
-        <button onclick="completePayment('${token}', 'online')">Done</button>
+        <img 
+            src="https://github.com/P170-Rp/Parking-Management-System/blob/main/WhatsApp%20Image%202025-12-26%20at%2011.47.20%20AM.jpeg"
+            alt="QR Code"
+            width="150"
+            height="150"
+        >
+        <p>Token: <strong>${token}</strong></p>
+        <button onclick="completePayment('${token}', 'online')">
+            Done
+        </button>
     `;
 }
 
